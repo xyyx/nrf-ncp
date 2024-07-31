@@ -7,6 +7,7 @@
 / {
 	chosen {
 		ncs,zigbee-uart = &uart1;
+		zephyr,code-partition = &slot0_partition;
 	};
 
 	nrf_radio_fem: at2401c {
