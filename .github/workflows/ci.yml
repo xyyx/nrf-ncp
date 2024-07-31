@@ -66,7 +66,7 @@ jobs:
       - name: 🔨 Build Project
         run: |
           cd zephyr-workspace
-          west build nrf/samples/zigbee/ncp  -b $BOARD
+          west build nrf/samples/zigbee/ncp  -b $BOARD -Dmcuboot_EXTRA_CONF_FILE=$(pwd)/extra/mcuboot.conf
           mv build/merged.hex build/ncp-$BOARD-$SDK_VER.hex
 
       - name: 📦 Save Build Artifacts
