@@ -26,7 +26,7 @@
 	pinctrl-0 = <&uart1_default_alt>;
 	pinctrl-1 = <&uart1_sleep_alt>;
 	pinctrl-names = "default", "sleep";
-	current-speed = <250000>;
+	current-speed = <115200>;
 	status = "okay";
 };
 
