@@ -10,6 +10,7 @@ on:
 env:
   SDK_VER: v2.7.0
   BOARD: nrf52840dk_nrf52840
+  BAUDRATE: 115200
 
 jobs:
   build:
@@ -20,6 +21,10 @@ jobs:
           # Clone the repo to a subdirectory, so we can initialize the Zephyr
           # workspace in the parent directory.
           path: zephyr-workspace/extra
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          version: 3.12
 
       - name: 🧰 Install Dependencies + West
         # Install the Zephyr host build dependencies, and the `west` Python tool.
@@ -54,6 +59,7 @@ jobs:
         run: |
           cp zephyr-workspace/extra/$BOARD.overlay zephyr-workspace/nrf/samples/zigbee/ncp/boards/$BOARD.overlay
           cp zephyr-workspace/extra/$BOARD.conf zephyr-workspace/nrf/samples/zigbee/ncp/boards/$BOARD.conf
+          sed -i "s/current-speed = \<[0-9]+\>;/current-speed = <$BAUDRATE>;/" zephyr-workspace/nrf/samples/zigbee/ncp/boards/$BOARD.overlay
 
       - name: ♻️ Initialize Zephyr Workspace
         # Set up the Zephyr workspace and install the Python dependencies
@@ -67,10 +73,20 @@ jobs:
         run: |
           cd zephyr-workspace
           west build nrf/samples/zigbee/ncp  -b $BOARD -Dmcuboot_EXTRA_CONF_FILE=$(pwd)/extra/mcuboot.conf
-          mv build/merged.hex build/ncp-$BOARD-$SDK_VER.hex
+          mv build/merged.hex build/ncp-$BOARD-$SDK_VER-$BAUDRATE.hex
 
+      - name: Install adafruit-nrfutil
+        run: >-
+          pip install adafruit-nrfutil
+
+      - name: 🔨 Build DFU package
+        run: >-
+          adafruit-nrfutil dfu genpkg --dev-type 0x0052 --application build/ncp-$BOARD-$SDK_VER-$BAUDRATE.hex build/ncp-$BOARD-$SDK_VER-$BAUDRATE-dfu.zip
+          
       - name: 📦 Save Build Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: build-artifacts
-          path: zephyr-workspace/build/*.hex
+          path: |
+            zephyr-workspace/build/*.hex
+            zephyr-workspace/build/*-dfu.zip
