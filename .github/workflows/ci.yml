@@ -81,7 +81,7 @@ jobs:
 
       - name: 🔨 Build DFU package
         run: >-
-          adafruit-nrfutil dfu genpkg --dev-type 0x0052 --application build/ncp-$BOARD-$SDK_VER-$BAUDRATE.hex build/ncp-$BOARD-$SDK_VER-$BAUDRATE-dfu.zip
+          adafruit-nrfutil dfu genpkg --dev-type 0x0052 --application zephyr-workspace/build/ncp-$BOARD-$SDK_VER-$BAUDRATE.hex zephyr-workspace/build/ncp-$BOARD-$SDK_VER-$BAUDRATE-dfu.zip
           
       - name: 📦 Save Build Artifacts
         uses: actions/upload-artifact@v4
