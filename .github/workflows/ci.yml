@@ -9,6 +9,7 @@ on:
 
 env:
   SDK_VER: v2.7.0
+  SDK_VER_HEX: "0x00000702"
   BOARD: nrf52840dk_nrf52840
   BAUDRATE: 115200
 
@@ -60,6 +61,8 @@ jobs:
           cp zephyr-workspace/extra/$BOARD.overlay zephyr-workspace/nrf/samples/zigbee/ncp/boards/$BOARD.overlay
           cp zephyr-workspace/extra/$BOARD.conf zephyr-workspace/nrf/samples/zigbee/ncp/boards/$BOARD.conf
           sed -i "s/current-speed = \<[0-9]+\>;/current-speed = <$BAUDRATE>;/" zephyr-workspace/nrf/samples/zigbee/ncp/boards/$BOARD.overlay
+
+          echo "\n\nzb_uint32_t zb_osif_get_fw_version(void) { return ${SDK_VER_HEX}; }" >> zephyr-workspace/nrf/samples/zigbee/ncp/src/main.c
 
       - name: ♻️ Initialize Zephyr Workspace
         # Set up the Zephyr workspace and install the Python dependencies
