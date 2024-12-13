@@ -8,8 +8,8 @@ on:
   workflow_dispatch:
 
 env:
-  SDK_VER: v2.7.0
-  SDK_VER_HEX: "0x02070000"
+  SDK_VER: v2.8.0
+  SDK_VER_HEX: "0x02080000"
   BOARD: nrf52840dk_nrf52840
   BAUDRATE: 115200
 
